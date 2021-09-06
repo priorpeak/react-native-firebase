@@ -12,7 +12,8 @@ export default function LoginScreen({ navigation }) {
   const provider = new GoogleAuthProvider();
 
   const onFooterLinkPress = () => {
-    navigation.navigate("Home", { user: "" });
+    console.log("FOOTER PRESSED");
+    navigation.navigate("Registration");
   };
 
   const onLoginPress = () => {
@@ -25,7 +26,7 @@ export default function LoginScreen({ navigation }) {
         const user = result.user;
         console.log(user);
         console.log("SUCCESS");
-        navigation.navigate("Home", { user: user });
+        navigation.navigate("Home");
         // ...
       })
       .catch((error) => {
