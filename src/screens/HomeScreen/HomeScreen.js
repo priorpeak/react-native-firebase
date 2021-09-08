@@ -9,6 +9,7 @@ export default function HomeScreen() {
   // export default function Scanner() {
   const [hasPermission, setHasPermission] = useState(null);
   const [scanned, setScanned] = useState(false);
+  const Http = new XMLHttpRequest();
 
   useEffect(() => {
     (async () => {
@@ -20,6 +21,29 @@ export default function HomeScreen() {
   const handleBarCodeScanned = ({ type, data }) => {
     setScanned(true);
     alert(`Bar code with type ${type} and data ${data} has been scanned!`);
+
+    data = data.substring(1);
+    const url =
+      "https://api.nal.usda.gov/fdc/v1/foods/search?api_key=xHd15jjwT1zhv7PRQ5foh0OeL4lWf1Yesjvy3TnS&query=" +
+      data;
+    Http.open("GET", url);
+
+    Http.send();
+
+    Http.onreadystatechange = (e) => {
+      if (Http.readyState == 4 && Http.status == 200) {
+        const foodJSON = JSON.parse(Http.responseText);
+        // console.log(foodJSON);
+
+        console.log("FOOD:");
+        const foodName = foodJSON.foods[0].description;
+        console.log(foodName);
+
+        console.log("CALORIES:");
+        const calories = foodJSON.foods[0].foodNutrients[3].value;
+        console.log(calories);
+      }
+    };
   };
 
   if (hasPermission === null) {
