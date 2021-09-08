@@ -2,6 +2,7 @@ import React from "react";
 import { Text, View } from "react-native";
 // import { Navigation } from "selenium-webdriver";
 import { user } from "../LoginScreen/LoginScreen";
+import Scanner from "../../scanner";
 
 export default function HomeScreen() {
   //   const authCheck = (user) => {
@@ -14,9 +15,12 @@ export default function HomeScreen() {
 
   //   authCheck(user);
 
+  const result = Scanner()
+  console.log('SCANNER RESULT: ' + result)
+
   return (
     <View>
-      <Text>Home Screen</Text>
+      <Text>{ result }</Text>
     </View>
   );
 }

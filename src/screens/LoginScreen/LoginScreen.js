@@ -3,39 +3,30 @@ import { Image, Text, TextInput, TouchableOpacity, View } from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import styles from "./styles";
 import { firebase } from "../../firebase/config";
-import { getAuth, signInWithPopup, GoogleAuthProvider } from "firebase/auth";
+import * as Google from 'expo-google-app-auth';
 
 export default function LoginScreen({ navigation }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const auth = getAuth();
-  const provider = new GoogleAuthProvider();
 
-  const onLoginPress = () => {
-    signInWithPopup(auth, provider)
-      .then((result) => {
-        // This gives you a Google Access Token. You can use it to access the Google API.
-        const credential = GoogleAuthProvider.credentialFromResult(result);
-        const token = credential.accessToken;
-        // The signed-in user info.
-        const user = result.user;
-        console.log(user);
-        console.log("SUCCESS");
-        navigation.navigate("Home");
-        // ...
-      })
-      .catch((error) => {
-        console.log("ERROR");
-        // Handle Errors here.
-        const errorCode = error.code;
-        const errorMessage = error.message;
-        // The email of the user's account used.
-        const email = error.email;
-        // The AuthCredential type that was used.
-        const credential = GoogleAuthProvider.credentialFromError(error);
-        // ...
+  async function signInWithGoogleAsync() {
+    try {
+      const result = await Google.logInAsync({
+        androidClientId: '374263006325-uetse2eogc2sf7fr85jamp12f9tb9nc8.apps.googleusercontent.com',
+        iosClientId: '374263006325-8f779gve3nos6tlmnlmrt4tgf2rha6gv.apps.googleusercontent.com',
+        scopes: ['profile', 'email'],
       });
-  };
+  
+      if (result.type === 'success') {
+        navigation.navigate('Home')
+        return result.accessToken;
+      } else {
+        return { cancelled: true };
+      }
+    } catch (e) {
+      return { error: true };
+    }
+  }
 
   return (
     <View style={styles.container}>
@@ -47,7 +38,7 @@ export default function LoginScreen({ navigation }) {
           style={styles.logo}
           source={require("../../../assets/icon.png")}
         />
-        <TouchableOpacity style={styles.button} onPress={() => onLoginPress()}>
+        <TouchableOpacity style={styles.button} onPress={() => signInWithGoogleAsync()}>
           <Text style={styles.buttonTitle}>Log in with Google</Text>
         </TouchableOpacity>
       </KeyboardAwareScrollView>

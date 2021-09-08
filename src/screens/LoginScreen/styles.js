@@ -26,8 +26,8 @@ export default StyleSheet.create({
   },
   button: {
     backgroundColor: "#788eec",
-    marginLeft: 600,
-    marginRight: 600,
+    marginLeft: 100,
+    marginRight: 100,
     marginTop: 20,
     height: 48,
     borderRadius: 5,
