@@ -1,128 +1,47 @@
+import { NavigationContainer } from "@react-navigation/native";
 import React, { useState, useEffect } from "react";
-import { StyleSheet, Text, View, Button } from "react-native";
-// import { Navigation } from "selenium-webdriver";
-// import { user } from "../LoginScreen/LoginScreen";
-// import Scanner from "../../scanner";
-import * as firebase from "firebase";
-import "firebase/firestore";
-import { BarCodeScanner } from "expo-barcode-scanner";
+import { TextInput, View, TouchableOpacity, Text } from "react-native";
+import styles from "./styles";
+// import * as firebase from "firebase";
+// import "firebase/firestore";
 
-// Your web app's Firebase configuration
-const firebaseConfig = {
-  apiKey: "AIzaSyCE8oIPSJf3PEE3V1Dr5vXeURK4fd3ausw",
-  authDomain: "sd-mini-project.firebaseapp.com",
-  projectId: "sd-mini-project",
-  storageBucket: "sd-mini-project.appspot.com",
-  messagingSenderId: "644920394140",
-  appId: "1:644920394140:web:8eec2d1a16d70419470859",
-};
+export default function HomeScreen({ navigation }) {
+  const [numServings, setNumServings] = useState("");
+  const [recipeName, setRecipeName] = useState("");
+  let totalCalories = "345";
 
-// Initialize Firebase
-firebase.initializeApp(firebaseConfig);
-
-// Variable to store food name
-let foodName = "";
-// Variable to store number of servings
-let numServings = 1;
-// Variable to store whether food item is a part of a recipe
-let recipeBool = false;
-// Variable to store food calories
-let calories = "";
-// Variable to store total calories
-let totalCalories = "";
-// Object to store Firestore document data
-let docData = {};
-
-export default function HomeScreen() {
-  // export default function Scanner() {
-  const [hasPermission, setHasPermission] = useState(null);
-  const [scanned, setScanned] = useState(false);
-  // HTTP request object
-  const Http = new XMLHttpRequest();
-  // Firestore object
-  const db = firebase.firestore();
-
-  useEffect(() => {
-    (async () => {
-      const { status } = await BarCodeScanner.requestPermissionsAsync();
-      setHasPermission(status === "granted");
-    })();
-  }, []);
-
-  const handleBarCodeScanned = ({ type, data }) => {
-    setScanned(true);
-    alert(`Bar code with type ${type} and data ${data} has been scanned!`);
-
-    // Parse off first character of data string (Barcode scanner appends an extra 0 for some reason - will continue to investigate if time permits)
-    data = data.substring(1);
-
-    // HTTP request to FDC API to retrieve food information
-    const url =
-      "https://api.nal.usda.gov/fdc/v1/foods/search?api_key=xHd15jjwT1zhv7PRQ5foh0OeL4lWf1Yesjvy3TnS&query=" +
-      data;
-    Http.open("GET", url);
-
-    Http.send();
-
-    Http.onreadystatechange = (e) => {
-      if (Http.readyState == 4 && Http.status == 200) {
-        const foodJSON = JSON.parse(Http.responseText);
-        // console.log(foodJSON);
-
-        console.log("FOOD:");
-        foodName = foodJSON.foods[0].description;
-        console.log(foodName);
-
-        console.log("CALORIES PER SERVING:");
-        calories = foodJSON.foods[0].foodNutrients[3].value;
-        console.log(calories);
-
-        console.log("TOTAL CALORIES:");
-        totalCalories = calories * numServings;
-        console.log(totalCalories);
-
-        docData = {
-          calsPerServing: calories,
-          servings: numServings,
-          totalCals: totalCalories,
-          recipeItem: recipeBool,
-        };
-        console.log(docData);
-
-        // Store data in Firestore
-        documentAdd();
-      }
-    };
-  };
-
-  const documentAdd = async () => {
-    db.collection("Foods").doc(foodName).set(docData);
-  };
-
-  if (hasPermission === null) {
-    return <Text>Requesting for camera permission</Text>;
-  }
-  if (hasPermission === false) {
-    return <Text>No access to camera</Text>;
-  }
+  // const documentQuery = await getDocs(collection(db, "Foods"));
+  // querySnapshot.forEach((doc) => {
+  //   // doc.data() is never undefined for query doc snapshots
+  //   console.log(doc.id, " => ", doc.data());
+  // });
 
   return (
     <View style={styles.container}>
-      <BarCodeScanner
-        onBarCodeScanned={scanned ? undefined : handleBarCodeScanned}
-        style={StyleSheet.absoluteFillObject}
+      <Text>Home Screen</Text>
+
+      <Text>Number of Servings:</Text>
+      <TextInput
+        style={styles.input}
+        placeholder="1"
+        onChangeText={(val) => setNumServings(val)}
       />
-      {scanned && (
-        <Button title={"Tap to Scan Again"} onPress={() => setScanned(false)} />
-      )}
+
+      <Text>Enter Recipe Name (leave blank if a la carte):</Text>
+
+      <TextInput
+        style={styles.input}
+        style={styles.input}
+        placeholder="Mac and Cheese"
+        onChangeText={(val) => setRecipeName(val)}
+      />
+      <TouchableOpacity
+        style={styles.button}
+        onPress={() => navigation.navigate("Barcode")}
+      >
+        <Text style={styles.buttonTitle}>Barcode Scanner</Text>
+      </TouchableOpacity>
+      <Text>Total Calories: {totalCalories}</Text>
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    flexDirection: "column",
-    justifyContent: "center",
-  },
-});

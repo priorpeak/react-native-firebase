@@ -4,6 +4,7 @@ import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import { LoginScreen, HomeScreen, RegistrationScreen } from "./src/screens";
 import { decode, encode } from "base-64";
+import { BarcodeScreen } from "./src/screens";
 
 if (!global.btoa) {
   global.btoa = encode;
@@ -24,6 +25,7 @@ export default function App() {
         <Stack.Screen name="Home" component={HomeScreen} />
         <Stack.Screen name="Login" component={LoginScreen} />
         <Stack.Screen name="Registration" component={RegistrationScreen} />
+        <Stack.Screen name="Barcode" component={BarcodeScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );
