@@ -16,7 +16,6 @@
     "expo-barcode-scanner": "~10.2.2",
     "expo-google-app-auth": "^8.2.2",
     "expo-status-bar": "~1.0.4",
-    "@firebase": "^9.0.1",
     "react": "16.13.1",
     "react-dom": "16.13.1",
     "react-native": "https://github.com/expo/react-native/archive/sdk-42.0.0.tar.gz",
