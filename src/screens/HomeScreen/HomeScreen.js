@@ -3,13 +3,44 @@ import { StyleSheet, Text, View, Button } from "react-native";
 // import { Navigation } from "selenium-webdriver";
 // import { user } from "../LoginScreen/LoginScreen";
 // import Scanner from "../../scanner";
+import * as firebase from "firebase";
+import "firebase/firestore";
 import { BarCodeScanner } from "expo-barcode-scanner";
+
+// Your web app's Firebase configuration
+const firebaseConfig = {
+  apiKey: "AIzaSyCE8oIPSJf3PEE3V1Dr5vXeURK4fd3ausw",
+  authDomain: "sd-mini-project.firebaseapp.com",
+  projectId: "sd-mini-project",
+  storageBucket: "sd-mini-project.appspot.com",
+  messagingSenderId: "644920394140",
+  appId: "1:644920394140:web:8eec2d1a16d70419470859",
+};
+
+// Initialize Firebase
+firebase.initializeApp(firebaseConfig);
+
+// Variable to store food name
+let foodName = "";
+// Variable to store number of servings
+let numServings = 1;
+// Variable to store whether food item is a part of a recipe
+let recipeBool = false;
+// Variable to store food calories
+let calories = "";
+// Variable to store total calories
+let totalCalories = "";
+// Object to store Firestore document data
+let docData = {};
 
 export default function HomeScreen() {
   // export default function Scanner() {
   const [hasPermission, setHasPermission] = useState(null);
   const [scanned, setScanned] = useState(false);
+  // HTTP request object
   const Http = new XMLHttpRequest();
+  // Firestore object
+  const db = firebase.firestore();
 
   useEffect(() => {
     (async () => {
@@ -22,7 +53,10 @@ export default function HomeScreen() {
     setScanned(true);
     alert(`Bar code with type ${type} and data ${data} has been scanned!`);
 
+    // Parse off first character of data string (Barcode scanner appends an extra 0 for some reason - will continue to investigate if time permits)
     data = data.substring(1);
+
+    // HTTP request to FDC API to retrieve food information
     const url =
       "https://api.nal.usda.gov/fdc/v1/foods/search?api_key=xHd15jjwT1zhv7PRQ5foh0OeL4lWf1Yesjvy3TnS&query=" +
       data;
@@ -36,14 +70,33 @@ export default function HomeScreen() {
         // console.log(foodJSON);
 
         console.log("FOOD:");
-        const foodName = foodJSON.foods[0].description;
+        foodName = foodJSON.foods[0].description;
         console.log(foodName);
 
-        console.log("CALORIES:");
-        const calories = foodJSON.foods[0].foodNutrients[3].value;
+        console.log("CALORIES PER SERVING:");
+        calories = foodJSON.foods[0].foodNutrients[3].value;
         console.log(calories);
+
+        console.log("TOTAL CALORIES:");
+        totalCalories = calories * numServings;
+        console.log(totalCalories);
+
+        docData = {
+          calsPerServing: calories,
+          servings: numServings,
+          totalCals: totalCalories,
+          recipeItem: recipeBool,
+        };
+        console.log(docData);
+
+        // Store data in Firestore
+        documentAdd();
       }
     };
+  };
+
+  const documentAdd = async () => {
+    db.collection("Foods").doc(foodName).set(docData);
   };
 
   if (hasPermission === null) {
