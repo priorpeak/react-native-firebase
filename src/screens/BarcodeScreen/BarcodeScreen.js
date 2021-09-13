@@ -1,22 +1,22 @@
 import React, { useState, useEffect } from "react";
 import { StyleSheet, Text, View, Button } from "react-native";
 import { BarCodeScanner } from "expo-barcode-scanner";
-// import { documentAdd } from "../../firebase/config";
+// import { db, collection } from "../../firebase/config";
 import firebase from "firebase/app";
-import firestore from "firebase/firestore";
+import "firebase/firestore";
 
 // Your web app's Firebase configuration
-const firebaseConfig = {
-  apiKey: "AIzaSyCE8oIPSJf3PEE3V1Dr5vXeURK4fd3ausw",
-  authDomain: "sd-mini-project.firebaseapp.com",
-  projectId: "sd-mini-project",
-  storageBucket: "sd-mini-project.appspot.com",
-  messagingSenderId: "644920394140",
-  appId: "1:644920394140:web:8eec2d1a16d70419470859",
-};
+// const firebaseConfig = {
+//   apiKey: "AIzaSyCE8oIPSJf3PEE3V1Dr5vXeURK4fd3ausw",
+//   authDomain: "sd-mini-project.firebaseapp.com",
+//   projectId: "sd-mini-project",
+//   storageBucket: "sd-mini-project.appspot.com",
+//   messagingSenderId: "644920394140",
+//   appId: "1:644920394140:web:8eec2d1a16d70419470859",
+// };
 
 // Initialize Firebase
-firebase.initializeApp(firebaseConfig);
+// firebase.initializeApp(firebaseConfig);
 
 // Variable to store food name
 let foodName = "";

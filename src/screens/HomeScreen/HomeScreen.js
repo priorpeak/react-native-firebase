@@ -3,18 +3,18 @@ import React, { useState, useEffect } from "react";
 import { TextInput, View, TouchableOpacity, Text } from "react-native";
 import styles from "./styles";
 // import * as firebase from "firebase";
-// import "firebase/firestore";
+import { collection, getDocs } from "firebase/firestore";
 
 export default function HomeScreen({ navigation }) {
   const [numServings, setNumServings] = useState("");
   const [recipeName, setRecipeName] = useState("");
   let totalCalories = "345";
 
-  // const documentQuery = await getDocs(collection(db, "Foods"));
-  // querySnapshot.forEach((doc) => {
-  //   // doc.data() is never undefined for query doc snapshots
-  //   console.log(doc.id, " => ", doc.data());
-  // });
+  const documentQuery = await getDocs(collection(db, "Foods"));
+  querySnapshot.forEach((doc) => {
+    // doc.data() is never undefined for query doc snapshots
+    console.log(doc.id, " => ", doc.data());
+  });
 
   return (
     <View style={styles.container}>
