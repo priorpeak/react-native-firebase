@@ -4,6 +4,7 @@ import { BarCodeScanner } from "expo-barcode-scanner";
 // import { db, collection } from "../../firebase/config";
 import firebase from "firebase/app";
 import "firebase/firestore";
+import { render } from "react-dom";
 
 // Your web app's Firebase configuration
 // const firebaseConfig = {
@@ -39,6 +40,12 @@ export default function BarcodeScreen({ navigation }) {
   const Http = new XMLHttpRequest();
   // Firestore object
   const db = firebase.firestore();
+
+  render(); {
+    const{navigation} = this.props;
+    const recipeArray = navigation.getParam('recipeArray');
+    const numServings = navigation.getParam('numServings');
+  }
 
   useEffect(() => {
     (async () => {
