@@ -5,7 +5,7 @@ import { BarCodeScanner } from "expo-barcode-scanner";
 import firebase from "firebase/app";
 import firestore from "firebase/firestore";
 
-import {numServings, setNumServings, totalCalories, setTotalCalories} from './screens/HomeScreen';
+import { numServings, setNumServings } from "../HomeScreen/HomeScreen";
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
@@ -76,6 +76,8 @@ export default function BarcodeScreen({ navigation }) {
         console.log("CALORIES PER SERVING:");
         calories = foodJSON.foods[0].foodNutrients[3].value;
         console.log(calories);
+
+        console.log("NUM SERVINGS: " + numServings);
 
         console.log("TOTAL CALORIES:");
         totalCalories = calories * numServings;
