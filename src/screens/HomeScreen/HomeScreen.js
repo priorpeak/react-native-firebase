@@ -2,11 +2,14 @@ import { NavigationContainer } from "@react-navigation/native";
 import React, { useState, useEffect } from "react";
 import { TextInput, View, TouchableOpacity, Text, Button } from "react-native";
 import styles from "./styles";
+
+import {addFood, getFoods} from 
+
 // import * as firebase from "firebase";
 // import "firebase/firestore";
 
 export default function HomeScreen({ navigation }) {
-  
+
   const [numServings, setNumServings] = useState(0);
   const [totalCalories, setTotalCalories] = useState(0);
 
@@ -28,6 +31,22 @@ export default function HomeScreen({ navigation }) {
       
   }
 
+  async function getFoods(foodsRetrieved) {
+    var foodList = [];
+
+    var snapshot = await firebase.firestore()
+    .collection('Foods')
+    .orderBy('createdAt')
+    .get()
+
+    snapshot.forEach((doc) => {
+      foodList.push(doc.data());
+    });
+
+    foodsRetrieved(foodList);
+  }
+
+
   const addRecipe = () => {
     setRecipeArray([...recipeName, {
       id: recipeArray.length,
@@ -43,7 +62,7 @@ export default function HomeScreen({ navigation }) {
 
   return (
     <View style={styles.container}>
-      <Text style={{fontSize: 30, marginTop: 50, marginBottom: 50}}>Total Calories: {totalCalories}}</Text>
+      <Text style={{fontSize: 30, marginTop: 50, marginBottom: 50}}>Total Calories: {totalCalories}</Text>
       
       <Text style={{fontSize: 30, marginBottom: 10}}>Add a Food</Text>
 
@@ -78,6 +97,8 @@ export default function HomeScreen({ navigation }) {
       />
 
       <Button title = "Enter"/>
+
+      <Text>Recent Foods:</Text>
 
     </View>
   );
