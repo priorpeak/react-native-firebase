@@ -54,22 +54,13 @@ export default function HomeScreen({ navigation }) {
         <Button style = {{marginBottom: 20}} onPress={incrementServings} title="+" />
       </View>
 
-      {/* <Text>Number of Servings:</Text> 
+      <Text>Search for Food:</Text>
+
       <TextInput
         style={styles.input}
-        placeholder="1"
-        onChangeText={(val) => setNumServings(val)}
+        placeholder="Mac and Cheese"
+        onChangeText={(val) => setRecipeName(val)}
       />
-
-      <TouchableOpacity 
-        style={styles.button} 
-      >
-        <Text style={styles.buttonTitle}>Enter</Text>
-        </TouchableOpacity>
-      */}
-
-      
-
 
       <Text>Enter Recipe Name (leave blank if a la carte):</Text>
 
@@ -85,9 +76,8 @@ export default function HomeScreen({ navigation }) {
         style={styles.button}
         onPress={() => navigation.navigate("Barcode")}
       >
-        <Text style={styles.buttonTitle}>Barcode Scanner</Text>
+        <Text style={styles.buttonTitle}>Add Food With Barcode</Text>
       </TouchableOpacity>
-      <Text>Total Calories: {totalCalories}</Text>
     </View>
   );
 }
