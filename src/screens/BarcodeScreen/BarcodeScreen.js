@@ -5,6 +5,8 @@ import { BarCodeScanner } from "expo-barcode-scanner";
 import firebase from "firebase/app";
 import firestore from "firebase/firestore";
 
+import {numServings, setNumServings, totalCalories, setTotalCalories} from './screens/HomeScreen';
+
 // Your web app's Firebase configuration
 const firebaseConfig = {
   apiKey: "AIzaSyCE8oIPSJf3PEE3V1Dr5vXeURK4fd3ausw",
@@ -21,13 +23,13 @@ firebase.initializeApp(firebaseConfig);
 // Variable to store food name
 let foodName = "";
 // Variable to store number of servings
-let numServings = 1;
+//let numServings = 1;
 // Variable to store whether food item is a part of a recipe
 // let recipeBool = false;
 // Variable to store food calories
 let calories = "";
 // Variable to store total calories
-let totalCalories = "";
+//let totalCalories = "";
 // Object to store Firestore document data
 let docData = {};
 

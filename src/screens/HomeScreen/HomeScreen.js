@@ -43,7 +43,7 @@ export default function HomeScreen({ navigation }) {
 
   return (
     <View style={styles.container}>
-      <Text style={{fontSize: 30, marginTop: 20, marginBottom: 50}}>Total Calories: 0</Text>
+      <Text style={{fontSize: 30, marginTop: 50, marginBottom: 50}}>Total Calories: {totalCalories}}</Text>
       
       <Text style={{fontSize: 30, marginBottom: 10}}>Add a Food</Text>
 
@@ -53,6 +53,13 @@ export default function HomeScreen({ navigation }) {
         <Text style={{fontSize: 20, marginBottom: -10}}>{numServings}</Text>
         <Button style = {{marginBottom: 20}} onPress={incrementServings} title="+" />
       </View>
+
+      <TouchableOpacity
+        style={styles.button}
+        onPress={() => navigation.navigate("Barcode")}
+      >
+        <Text style={styles.buttonTitle}>Add With Barcode</Text>
+      </TouchableOpacity>
 
       <Text>Search for Food:</Text>
 
@@ -72,12 +79,6 @@ export default function HomeScreen({ navigation }) {
 
       <Button title = "Enter"/>
 
-      <TouchableOpacity
-        style={styles.button}
-        onPress={() => navigation.navigate("Barcode")}
-      >
-        <Text style={styles.buttonTitle}>Add Food With Barcode</Text>
-      </TouchableOpacity>
     </View>
   );
 }
