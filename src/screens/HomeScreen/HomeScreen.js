@@ -3,17 +3,19 @@ import React, { useState, useEffect } from "react";
 import { TextInput, View, TouchableOpacity, Text, Button } from "react-native";
 import styles from "./styles";
 
-// import {addFood, getFoods} from
-
-// import * as firebase from "firebase";
-// import "firebase/firestore";
+import firebase from "firebase/app";
+import "firebase/firestore";
 
 export default function HomeScreen({ navigation }) {
-  const [numServings, setNumServings] = useState(0);
+  const [numServings, setNumServings] = useState(1);
   const [totalCalories, setTotalCalories] = useState(0);
+  const numServingsContext = React.createContext(1);
 
   const [recipeName, setRecipeName] = useState("");
   const [recipeArray, setRecipeArray] = useState([]);
+
+  // Firestore object
+  const db = firebase.firestore();
 
   const incrementServings = () => {
     setNumServings(numServings + 1);
@@ -54,6 +56,11 @@ export default function HomeScreen({ navigation }) {
     ]);
   };
 
+  const storeAndNavigate = (numServings) => {
+    db.collection("DATA").doc("numServings").set({ numServings: numServings });
+    navigation.navigate("Barcode");
+  };
+
   // const documentQuery = await getDocs(collection(db, "Foods"));
   // querySnapshot.forEach((doc) => {
   //   // doc.data() is never undefined for query doc snapshots
@@ -78,6 +85,7 @@ export default function HomeScreen({ navigation }) {
           title="-"
         />
         <Text style={{ fontSize: 20, marginBottom: -10 }}>{numServings}</Text>
+        {/* <numServingsContext.Provider value={numServings} /> */}
         <Button
           style={{ marginBottom: 20 }}
           onPress={incrementServings}
@@ -87,7 +95,7 @@ export default function HomeScreen({ navigation }) {
 
       <TouchableOpacity
         style={styles.button}
-        onPress={() => navigation.navigate("Barcode")}
+        onPress={() => storeAndNavigate(numServings)}
       >
         <Text style={styles.buttonTitle}>Add With Barcode</Text>
       </TouchableOpacity>

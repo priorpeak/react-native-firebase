@@ -1,35 +1,32 @@
 import React, { useState, useEffect } from "react";
 import { StyleSheet, Text, View, Button } from "react-native";
 import { BarCodeScanner } from "expo-barcode-scanner";
-// import { documentAdd } from "../../firebase/config";
 import firebase from "firebase/app";
-import firestore from "firebase/firestore";
-
-import { numServings, setNumServings } from "../HomeScreen/HomeScreen";
+import { doc, getDoc } from "firebase/firestore";
 
 // Your web app's Firebase configuration
-const firebaseConfig = {
-  apiKey: "AIzaSyCE8oIPSJf3PEE3V1Dr5vXeURK4fd3ausw",
-  authDomain: "sd-mini-project.firebaseapp.com",
-  projectId: "sd-mini-project",
-  storageBucket: "sd-mini-project.appspot.com",
-  messagingSenderId: "644920394140",
-  appId: "1:644920394140:web:8eec2d1a16d70419470859",
-};
+// const firebaseConfig = {
+//   apiKey: "AIzaSyCE8oIPSJf3PEE3V1Dr5vXeURK4fd3ausw",
+//   authDomain: "sd-mini-project.firebaseapp.com",
+//   projectId: "sd-mini-project",
+//   storageBucket: "sd-mini-project.appspot.com",
+//   messagingSenderId: "644920394140",
+//   appId: "1:644920394140:web:8eec2d1a16d70419470859",
+// };
 
 // Initialize Firebase
-firebase.initializeApp(firebaseConfig);
+// firebase.initializeApp(firebaseConfig);
 
 // Variable to store food name
 let foodName = "";
 // Variable to store number of servings
-//let numServings = 1;
+let numServings = 1;
 // Variable to store whether food item is a part of a recipe
 // let recipeBool = false;
 // Variable to store food calories
 let calories = "";
 // Variable to store total calories
-//let totalCalories = "";
+let totalCalories = "";
 // Object to store Firestore document data
 let docData = {};
 
@@ -41,6 +38,23 @@ export default function BarcodeScreen({ navigation }) {
   const Http = new XMLHttpRequest();
   // Firestore object
   const db = firebase.firestore();
+
+  var docRef = db.collection("DATA").doc("numServings");
+
+  docRef
+    .get()
+    .then((doc) => {
+      if (doc.exists) {
+        numServings = doc.data().numServings;
+        console.log("Document data:", numServings);
+      } else {
+        // doc.data() will be undefined in this case
+        console.log("No such document!");
+      }
+    })
+    .catch((error) => {
+      console.log("Error getting document:", error);
+    });
 
   useEffect(() => {
     (async () => {
