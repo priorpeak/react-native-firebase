@@ -9,7 +9,6 @@ import "firebase/firestore";
 export default function HomeScreen({ navigation }) {
   const [numServings, setNumServings] = useState(1);
   const [totalCalories, setTotalCalories] = useState(0);
-  const numServingsContext = React.createContext(1);
 
   const [recipeName, setRecipeName] = useState("");
   const [recipeArray, setRecipeArray] = useState([]);
@@ -61,12 +60,6 @@ export default function HomeScreen({ navigation }) {
     navigation.navigate("Barcode");
   };
 
-  // const documentQuery = await getDocs(collection(db, "Foods"));
-  // querySnapshot.forEach((doc) => {
-  //   // doc.data() is never undefined for query doc snapshots
-  //   console.log(doc.id, " => ", doc.data());
-  // });
-
   return (
     <View style={styles.container}>
       <Text style={{ fontSize: 30, marginTop: 50, marginBottom: 50 }}>
@@ -85,7 +78,6 @@ export default function HomeScreen({ navigation }) {
           title="-"
         />
         <Text style={{ fontSize: 20, marginBottom: -10 }}>{numServings}</Text>
-        {/* <numServingsContext.Provider value={numServings} /> */}
         <Button
           style={{ marginBottom: 20 }}
           onPress={incrementServings}
