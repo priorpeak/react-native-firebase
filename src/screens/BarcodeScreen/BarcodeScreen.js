@@ -107,7 +107,7 @@ export default function BarcodeScreen({ navigation }) {
 
         // Store data in Firestore
         documentAdd(foodName, docData);
-
+        storeAndNavigate(docData);
         // Redirect back to home screen
         navigation.navigate("Home");
       }
@@ -116,6 +116,11 @@ export default function BarcodeScreen({ navigation }) {
 
   const documentAdd = async () => {
     db.collection("Foods").doc(foodName).set(docData);
+  };
+
+  const storeAndNavigate = (docData) => {
+    db.collection("Foods").doc("foodName").set(docData);
+    navigation.navigate("Home");
   };
 
   if (hasPermission === null) {

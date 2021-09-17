@@ -1,10 +1,11 @@
-import { NavigationContainer } from "@react-navigation/native";
-import React, { useState, useEffect } from "react";
+import { NavigationContainer, useScrollToTop } from "@react-navigation/native";
+import React, { useState, useEffect, Component } from "react";
 import { TextInput, View, TouchableOpacity, Text, Button } from "react-native";
 import styles from "./styles";
 
 import firebase from "firebase/app";
-import "firebase/firestore";
+import firestore from "firebase/firestore";
+
 
 export default function HomeScreen({ navigation }) {
   const [numServings, setNumServings] = useState(1);
@@ -29,6 +30,24 @@ export default function HomeScreen({ navigation }) {
     console.log("Servings: " + (numServings - 1));
   };
 
+  /*state = {
+    foods: []
+  }
+  constructor(props) {
+    super(props);
+    this.food = 
+      firestore()
+      .collection("Foods")
+      .onSnapshot(docs => {
+        let foods = []
+        docs.forEach(doc => {
+          foods.push(doc.data())
+        })
+        this.setState({foods})
+        console.log(foods)
+      })
+  }
+
   async function getFoods(foodsRetrieved) {
     var foodList = [];
 
@@ -42,9 +61,45 @@ export default function HomeScreen({ navigation }) {
       foodList.push(doc.data());
     });
 
+    console.log(foodList);
+
     foodsRetrieved(foodList);
   }
+  async function QuerySnapshot() {
+     try { 
+      const querySnapshot = await getDocs(collection(db, "Foods"));
+        querySnapshot.forEach((doc) => {
+        // doc.data() is never undefined for query doc snapshots
+        console.log(doc.id, " => ", doc.data());
+      });
+     }catch (e) {
+      return { error: true };
+    }
+  }
 
+  function onResult(querySnapshot) {
+    console.log('Got collection result.');
+  }
+  
+  function onError(error) {
+    console.error(error);
+  }  
+  
+  firestore().collection('Foods').onSnapshot(onResult, onError);
+  */
+
+  db.collection("Foods").where("Foods", "==", true)
+    .get()
+    .then((querySnapshot) => {
+        querySnapshot.forEach((doc) => {
+            // doc.data() is never undefined for query doc snapshots
+            console.log(doc.id, " => ", doc.data());
+        });
+        globalThis.foody = doc.data();
+    })
+    .catch((error) => {
+        console.log("Error getting documents: ", error);
+    });
   const addRecipe = () => {
     setRecipeArray([
       ...recipeName,
@@ -111,6 +166,8 @@ export default function HomeScreen({ navigation }) {
       <Button title="Enter" />
 
       <Text>Recent Foods:</Text>
+      <Text>{[foody].foodName}</Text>
+
     </View>
   );
 }
