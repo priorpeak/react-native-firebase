@@ -6,13 +6,16 @@ import styles from "./styles";
 import firebase from "firebase/app";
 import firestore from "firebase/firestore";
 
-
 export default function HomeScreen({ navigation }) {
   const [numServings, setNumServings] = useState(1);
   const [totalCalories, setTotalCalories] = useState(0);
+  const [foodData, setFoodData] = useState([]);
 
   const [recipeName, setRecipeName] = useState("");
   const [recipeArray, setRecipeArray] = useState([]);
+
+  var foodArray = [];
+  var totalCaloriesTemp = 0;
 
   // Firestore object
   const db = firebase.firestore();
@@ -88,18 +91,25 @@ export default function HomeScreen({ navigation }) {
   firestore().collection('Foods').onSnapshot(onResult, onError);
   */
 
-  db.collection("Foods").where("Foods", "==", true)
-    .get()
-    .then((querySnapshot) => {
+  const dbQuery = () => {
+    console.log("running function");
+    db.collection("Foods")
+      .get()
+      .then((querySnapshot) => {
         querySnapshot.forEach((doc) => {
-            // doc.data() is never undefined for query doc snapshots
-            console.log(doc.id, " => ", doc.data());
+          // doc.data() is never undefined for query doc snapshots
+          console.log(doc.id, " => ", doc.data());
+          foodArray.push(doc.id + " " + JSON.stringify(doc.data()));
+          totalCaloriesTemp += doc.data().totalCals;
+          setTotalCalories(totalCaloriesTemp);
         });
-        globalThis.foody = doc.data();
-    })
-    .catch((error) => {
+        setFoodData(foodArray);
+      })
+      .catch((error) => {
         console.log("Error getting documents: ", error);
-    });
+      });
+  };
+
   const addRecipe = () => {
     setRecipeArray([
       ...recipeName,
@@ -147,7 +157,7 @@ export default function HomeScreen({ navigation }) {
         <Text style={styles.buttonTitle}>Add With Barcode</Text>
       </TouchableOpacity>
 
-      <Text>Search for Food:</Text>
+      {/* <Text>Search for Food:</Text>
 
       <TextInput
         style={styles.input}
@@ -161,13 +171,14 @@ export default function HomeScreen({ navigation }) {
         style={styles.input}
         placeholder="Mac and Cheese"
         onChangeText={(val) => setRecipeName(val)}
-      />
+      /> */}
 
-      <Button title="Enter" />
+      <TouchableOpacity style={styles.button} onPress={() => dbQuery()}>
+        <Text style={styles.buttonTitle}>Display Recent Foods</Text>
+      </TouchableOpacity>
 
       <Text>Recent Foods:</Text>
-      <Text>{[foody].foodName}</Text>
-
+      <Text>{foodData}</Text>
     </View>
   );
 }
