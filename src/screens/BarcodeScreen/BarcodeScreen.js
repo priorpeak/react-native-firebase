@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { StyleSheet, Text, View, Button } from "react-native";
 import { BarCodeScanner } from "expo-barcode-scanner";
-// import { db, collection } from "../../firebase/config";
 import firebase from "firebase/app";
-import "firebase/firestore";
+import { doc, getDoc } from "firebase/firestore";
 
 // Your web app's Firebase configuration
 // const firebaseConfig = {
@@ -40,6 +39,23 @@ export default function BarcodeScreen({ navigation }) {
   // Firestore object
   const db = firebase.firestore();
 
+  var docRef = db.collection("DATA").doc("numServings");
+
+  docRef
+    .get()
+    .then((doc) => {
+      if (doc.exists) {
+        numServings = doc.data().numServings;
+        console.log("Document data:", numServings);
+      } else {
+        // doc.data() will be undefined in this case
+        console.log("No such document!");
+      }
+    })
+    .catch((error) => {
+      console.log("Error getting document:", error);
+    });
+
   useEffect(() => {
     (async () => {
       const { status } = await BarCodeScanner.requestPermissionsAsync();
@@ -75,6 +91,8 @@ export default function BarcodeScreen({ navigation }) {
         calories = foodJSON.foods[0].foodNutrients[3].value;
         console.log(calories);
 
+        console.log("NUM SERVINGS: " + numServings);
+
         console.log("TOTAL CALORIES:");
         totalCalories = calories * numServings;
         console.log(totalCalories);
@@ -89,7 +107,7 @@ export default function BarcodeScreen({ navigation }) {
 
         // Store data in Firestore
         documentAdd(foodName, docData);
-
+        storeAndNavigate(docData);
         // Redirect back to home screen
         navigation.navigate("Home");
       }
@@ -98,6 +116,11 @@ export default function BarcodeScreen({ navigation }) {
 
   const documentAdd = async () => {
     db.collection("Foods").doc(foodName).set(docData);
+  };
+
+  const storeAndNavigate = (docData) => {
+    db.collection("Foods").doc("foodName").set(docData);
+    navigation.navigate("Home");
   };
 
   if (hasPermission === null) {
